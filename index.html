@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <title>Test socket here</title>
+  <head>
+    <script
+	src="https://code.jquery.com/jquery-3.1.1.min.js"
+	integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	crossorigin="anonymous"></script>
+    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+    <script>
+     var socket = io.connect('http://localhost:8080');
+     socket.on('gifts', function (data) {
+       console.log(data);
+       socket.emit('my other event', { my: 'data' });
+     });
+    </script>
+  </head>
+  <body>
+    <h1>Create your gift</h1>
+    <form action="/gift" method="POST">
+      Name: <input name="name" required/><br/>
+      Lat: <input name="lat" required/><br/>
+      Lng: <input name="lng" required/><br/>
+      Gift pic: <input name="pic" required/><br/>
+      <button>Send</button>
+    </form>
+  </body>
+</html>

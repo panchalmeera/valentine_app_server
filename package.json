@@ -1,0 +1,18 @@
+{
+  "name": "valentine_app_server",
+  "version": "0.0.1",
+  "description": "Node Server for valentine app for unu",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "meera.panchal@yahoo.com",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "body-parser": "^1.16.1",
+    "express": "^4.14.1",
+    "mongodb": "^2.2.22",
+    "socketio": "^1.0.0"
+  }
+}
