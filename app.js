@@ -36,14 +36,15 @@ app.post('/gift', function(req, res){
 });
 
 app.post('/gift/:id/vote', function(req, res){
-  Gift.upvote(id)
+  var gift_id = req.params.id;
+  Gift.upvote(gift_id)
       .then(function(result){
 	refreshGifts();
 	var message = "Successfully upvoted";
 	res.send(message);
       })
       .catch(function(error){
-	var message = "Failed to upvote: " + id + " with error: " + error;
+	var message = "Failed to upvote: " + gift_id + " with error: " + error;
 	console.error(message);
 	res.status(400);
 	res.send('message');
