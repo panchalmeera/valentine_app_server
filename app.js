@@ -1,13 +1,15 @@
-var http = require('http');
 var express = require('express');
 var app = express();
-var socket_server = http.createServer(app);
-var io = require('socket.io')(socket_server);
-socket_server.listen(8080);
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server)
 var bodyParser = require('body-parser');
+server.listen(process.env.PORT || 3000);
+
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+global.MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/valentine_app';
 var Gift = require('./gift');
+
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -24,10 +26,13 @@ app.post('/gift', function(req, res){
   Gift.create(gift_details)
       .then(function(result){
 	refreshGifts();
-	res.send(result);
+	var message = "Successfully created your gift";
+	res.redirect('/?message=' + message);
       })
       .catch(function(error){
-	res.send(error);
+	var message = "Failed to create gift: " + error;
+	console.error(message);
+	res.redirect('/?message=' + message);
       });
 });
 
@@ -45,5 +50,3 @@ var refreshGifts = function(){
 	console.error(error);
       });
 };
-
-app.listen(3000);

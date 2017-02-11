@@ -3,11 +3,12 @@ var MongoClient = require('mongodb').MongoClient;
 
 var Gift = {
   create: function(details){
+    details["upvotes"] = 0;
     return new Promise(function(resolve, reject){
-      MongoClient.connect('mongodb://localhost:27017/valentine_app', function (err, db) {
+      MongoClient.connect(MONGO_URI, function (err, db) {
 	if (err) reject(err);
 
-	db.collection('gifts').find().toArray(function (err, result) {
+	db.collection('gifts').insertOne(details, function(err, result){
 	  if (err) reject(err);
 
 	  resolve(result);
@@ -18,7 +19,7 @@ var Gift = {
 
   all: function(){
     return new Promise(function(resolve, reject){
-      MongoClient.connect('mongodb://localhost:27017/valentine_app', function (err, db) {
+      MongoClient.connect(MONGO_URI, function (err, db) {
 	if (err) reject(err);
 
 	db.collection('gifts').find().toArray(function (err, result) {

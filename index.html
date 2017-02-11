@@ -6,16 +6,34 @@
 	src="https://code.jquery.com/jquery-3.1.1.min.js"
 	integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
 	crossorigin="anonymous"></script>
-    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-     var socket = io.connect('http://localhost:8080');
-     socket.on('gifts', function (data) {
-       console.log(data);
-       socket.emit('my other event', { my: 'data' });
+     function getParameterByName(name, url) {
+       if (!url) {
+	 url = window.location.href;
+       }
+       name = name.replace(/[\[\]]/g, "\\$&");
+       var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+           results = regex.exec(url);
+       if (!results) return null;
+       if (!results[2]) return '';
+       return decodeURIComponent(results[2].replace(/\+/g, " "));
+     }
+
+     $(document).ready(function(){
+       var message = getParameterByName('message');
+       if(message) $('#message').html(message);
+       
+       var socket = io.connect(location.origin);
+       socket.on('gifts', function (data) {
+	 console.log(data);
+	 socket.emit('my other event', { my: 'data' });
+       });
      });
     </script>
   </head>
   <body>
+    <p id="message"></p>
     <h1>Create your gift</h1>
     <form action="/gift" method="POST">
       Name: <input name="name" required/><br/>
