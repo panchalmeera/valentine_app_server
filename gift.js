@@ -32,6 +32,17 @@ var Gift = {
   },
 
   upvote: function(id){
+    return new Promise(function(resolve, reject){
+      MongoClient.connect(MONGO_URI, function (err, db) {
+	if (err) reject(err);
+
+	db.collection('gifts').update({_id: id}, {$inc: {upvotes: 1}}, function (err, result) {
+	  if (err) reject(err);
+
+	  resolve(result);
+	});
+      });
+    }); //end promise    
   }
   
 };

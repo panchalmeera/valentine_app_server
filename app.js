@@ -10,7 +10,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 global.MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/valentine_app';
 var Gift = require('./gift');
 
-
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
@@ -36,10 +35,24 @@ app.post('/gift', function(req, res){
       });
 });
 
+app.post('/gift/:id/vote', function(req, res){
+  Gift.upvote(id)
+      .then(function(result){
+	refreshGifts();
+	var message = "Successfully upvoted";
+	res.send(message);
+      })
+      .catch(function(error){
+	var message = "Failed to upvote: " + id + " with error: " + error;
+	console.error(message);
+	res.status(400);
+	res.send('message');
+      });
+});
+
 io.on('connection', function (socket) {
   refreshGifts();
 });
-
 
 var refreshGifts = function(){
   Gift.all()
